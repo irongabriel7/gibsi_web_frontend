@@ -1,0 +1,77 @@
+/* Existing styles... */
+/* User List Table */
+.responsive-table {
+  width: 100%;
+  margin-top: 1.4rem;
+  overflow-x: auto;
+}
+
+.fixed-width-table {
+  width: 100%;
+  min-width: 800px;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 32px rgba(0,0,0,0.07);
+  font-size: 1rem;
+  overflow: hidden;
+}
+
+.fixed-width-table th,
+.fixed-width-table td {
+  padding: 12px 18px;
+  white-space: nowrap;
+  border-bottom: 1px solid #ececec;
+  text-align: left;
+}
+
+.fixed-width-table th {
+  background-color: #f7f8fa;
+  font-weight: 600;
+  color: #14233a;
+  font-size: 1.05rem;
+  border-bottom: 2px solid #ececec;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Hoverable row style */
+.hoverable-row {
+  transition: background-color 0.2s ease;
+}
+.hoverable-row:hover {
+  background-color: #f0f8ff; /* Light highlight */
+  cursor: pointer;
+}
+.fixed-width-table tbody tr:hover {
+  background: #eff6ff;
+  cursor: pointer;
+}
+
+/* Section styling */
+.user-list-container {
+  padding: 2rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 1rem;
+}
+
+/* Optional: dark row themes */
+.row-buy {
+  background-color: #1f51db !important;
+  color: #f5f5f5;
+}
+.row-sell {
+  background-color: #db2f2f !important;
+  color: #f5f5f5;
+}

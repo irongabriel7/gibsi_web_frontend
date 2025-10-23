@@ -1,0 +1,103 @@
+.top-gainers-container {
+  padding: 20px;
+  font-family: "Segoe UI", sans-serif;
+  display: flex;
+  justify-content: center;
+}
+/* Central content block */
+.content-wrapper {
+  width: 900px;
+  background: #ffffff;
+  padding: 25px 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Header title */
+.header h2 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Market banner */
+.market-banner {
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 25px;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+}
+
+.market-banner.open {
+  background-color: #e7f9ee;
+  color: #27ae60;
+}
+
+.market-banner.closed {
+  background-color: #fcebea;
+  color: #c0392b;
+}
+
+.market-status {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.market-details {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.95rem;
+  color: #444;
+  gap: 2px;
+}
+
+.no-data {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  background-color: white;
+}
+
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.stock-table th,
+.stock-table td {
+  padding: 0.75rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.stock-table th {
+  background-color: #f1f5f9;
+  color: #374151;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.stock-table tr:hover {
+  background-color: #f3f4f6;
+}
+
+.profit-row {
+  background-color: #e6ffe6; /* light green */
+  color: #006400;
+}
+
+.loss-row {
+  background-color: #ffe6e6; /* light red */
+  color: #8b0000;
+}

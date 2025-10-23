@@ -1,0 +1,327 @@
+/* Container & layout */
+.db-overview-container {
+  max-width: 960px;
+  margin: 2rem auto 3rem;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  color: #1e293b;
+  display: flex;
+  flex-direction: column;
+  min-height: 74vh;
+  padding: 0 1rem;
+}
+
+/* Header */
+.header {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #0f172a;
+  user-select: none;
+}
+
+/* Collections grid */
+.collections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Collection card */
+.collection-card {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 6px 18px rgb(100 116 139 / 0.12);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: box-shadow 0.25s ease, transform 0.2s ease;
+  user-select: none;
+}
+
+.collection-card:hover,
+.collection-card:focus {
+  box-shadow: 0 10px 25px rgb(100 116 139 / 0.2);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.collection-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.collection-name {
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-bottom: 0.3rem;
+  color: #334155;
+  overflow-wrap: anywhere;
+}
+
+.collection-meta {
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.3;
+}
+
+/* Arrow */
+.collection-arrow {
+  font-size: 1.7rem;
+  color: #94a3b8;
+  margin-left: 1rem;
+  user-select: none;
+  transition: color 0.3s ease;
+}
+
+.collection-card:hover .collection-arrow,
+.collection-card:focus .collection-arrow {
+  color: #2563eb;
+}
+
+/* Card for collection view */
+.collection-view.card {
+  background: #ffffff;
+  padding: 1.5rem 2rem;
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgb(0 0 0 / 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 100%;
+  overflow: visible;
+}
+
+/* Back button */
+.back-btn {
+  align-self: flex-start;
+  background: #e2e8f0;
+  color: #334155;
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+  user-select: none;
+}
+
+.back-btn:hover:not(:disabled) {
+  background-color: #cbd5e1;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 1.8rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 200px;
+}
+
+.filter-group label {
+  font-weight: 600;
+  color: #475569;
+  user-select: none;
+}
+
+.filter-group input[type="text"],
+.filter-group input[type="date"] {
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  border: 1.5px solid #cbd5e1;
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filter-group input[type="text"]:focus,
+.filter-group input[type="date"]:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 6px #2563eb88;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-top: 0.3rem;
+}
+
+.filter-buttons .btn {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.45rem 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.25s ease;
+}
+
+.filter-buttons .btn.btn-secondary {
+  background-color: #64748b;
+}
+
+.filter-buttons .btn:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.filter-buttons .btn:not(:disabled):hover {
+  background-color: #1d4ed8;
+}
+
+.filter-buttons .btn.btn-secondary:hover:not(:disabled) {
+  background-color: #475569;
+}
+
+/* Error message */
+.error-msg {
+  color: #dc2626;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  user-select: none;
+  text-align: center;
+}
+
+/* Loading and no data */
+.loading,
+.no-data {
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-align: center;
+  margin: 2rem 0;
+  color: #475569;
+  user-select: none;
+}
+
+/* Table wrapper */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 12px;
+  box-shadow: inset 0 0 3px rgb(0 0 0 / 0.05);
+}
+
+/* Table */
+.stock-table {
+  width: max-content; /* ensures all columns show */
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  background: white;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+.stock-table thead tr {
+  background: #2563eb;
+  color: white;
+  user-select: none;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.stock-table th,
+.stock-table td {
+  padding: 8px 10px;
+  white-space: nowrap;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.stock-table tbody tr:hover {
+  background-color: #f1f5f9;
+  transition: background-color 0.2s ease;
+}
+
+/* Highlight BUY and SELL rows */
+.row-buy {
+  background-color: #dcfce7 !important;
+  color: #166534;
+  font-weight: 600;
+}
+
+.row-sell {
+  background-color: #fee2e2 !important;
+  color: #991b1b;
+  font-weight: 600;
+}
+
+/* Controls pagination */
+.controls {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.8rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.controls .btn {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.3rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.25s ease;
+}
+
+.controls .btn:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.controls .btn:not(:disabled):hover {
+  background-color: #1d4ed8;
+}
+
+/* Page info text */
+.page-info {
+  font-weight: 600;
+  color: #475569;
+  user-select: none;
+  user-select: none;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-top: 3rem;
+  user-select: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 720px) {
+  .filters {
+    flex-direction: column;
+  }
+
+  .filter-group {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .controls {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

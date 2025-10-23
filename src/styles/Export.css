@@ -1,0 +1,162 @@
+/* Global container */
+.export-container {
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  padding: 40px 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Title & subtitle */
+.export-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #1a202c;
+  margin-bottom: 8px;
+}
+
+.export-subtitle {
+  font-size: 15px;
+  color: #4a5568;
+  margin-bottom: 24px;
+}
+
+/* Card */
+.form-card {
+  background: #ffffff;
+  padding: 25px 30px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Date input */
+.date-label {
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #2d3748;
+}
+
+.date-input {
+  padding: 10px 14px;
+  font-size: 15px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e0;
+  margin-bottom: 16px;
+  width: 100%;
+  max-width: 250px;
+  text-align: center;
+  transition: 0.2s;
+}
+
+.date-input:focus {
+  border-color: #3182ce;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+}
+
+/* Button group for uniform size and spacing */
+.button-group {
+  display: flex;
+  gap: 16px; /* Space between buttons */
+  width: 100%;
+  max-width: 400px;
+  margin-top: 8px;
+}
+
+/* Button styling (export and delete) */
+.export-btn,
+.delete-btn {
+  flex: 1;                /* Equal width within group */
+  min-width: 140px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.export-btn {
+  background: #3182ce;
+  color: white;
+}
+
+.export-btn:hover {
+  background: #2b6cb0;
+}
+
+.export-btn:disabled {
+  background: #a0aec0;
+  cursor: not-allowed;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+.delete-btn:disabled,
+.delete-btn.disabled {
+  background-color: #c0392b;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+/* Status box */
+.status-box {
+  margin-top: 20px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.status-box.success {
+  background: #c6f6d5;
+  color: #22543d;
+  border: 1px solid #38a169;
+}
+
+.status-box.error {
+  background: #fed7d7;
+  color: #742a2a;
+  border: 1px solid #e53e3e;
+}
+
+.collection-select {
+  padding: 10px 14px;
+  font-size: 15px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e0;
+  background: #f7fafc;
+  margin-bottom: 16px;
+  width: 100%;
+  max-width: 250px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  text-align: left;
+  color: #2d3748;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='18' viewBox='0 0 24 24' width='18' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 18px 18px;
+}
+
+.collection-select:focus {
+  border-color: #3182ce;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+}
+
+.collection-select option {
+  color: #2d3748;
+  font-size: 15px;
+  padding: 6px;
+  background: #fff;
+}

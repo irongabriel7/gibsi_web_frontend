@@ -1,0 +1,29 @@
+.technical-indicator {
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f5f5f5;
+  color: #333;
+}
+
+.technical-indicator h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.dropdown-container {
+  margin-bottom: 1.5rem;
+}
+
+.dropdown-container select {
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.chart-container {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}

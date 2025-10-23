@@ -1,0 +1,213 @@
+/* AuthPage.css */
+
+/* Global reset for smooth visuals */
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  background: radial-gradient(circle at top, #1f2937, #111827);
+  font-family: 'Inter', sans-serif;
+  padding: 1rem;
+  color: #f3f4f6;
+}
+
+.auth-card {
+  background: rgba(31, 41, 55, 0.85);
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 420px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.auth-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #f9fafb;
+  letter-spacing: -0.5px;
+}
+
+/* Message styles */
+.auth-messages {
+  margin-bottom: 1rem;
+}
+
+.message {
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.message.error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.message.warning {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.message.success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+/* Form fields */
+.auth-form .input-group {
+  margin-bottom: 1rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #f9fafb;
+  font-size: 0.95rem;
+  transition: border 0.2s, background 0.2s;
+}
+
+.input-group input:focus {
+  outline: none;
+  border: 1px solid #6366f1;
+  background: rgba(255,255,255,0.08);
+}
+
+/* Auth method switch */
+.auth-method-switch {
+  display: flex;
+  margin-bottom: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.auth-method-switch button {
+  flex: 1;
+  padding: 0.6rem;
+  background: transparent;
+  color: #9ca3af;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.auth-method-switch button.active {
+  background: linear-gradient(90deg, #6366f1, #3b82f6);
+  color: white;
+  font-weight: 600;
+}
+
+.auth-method-switch button:hover:not(.active) {
+  background: rgba(255,255,255,0.08);
+}
+
+/* Passcode selector row */
+.passcode-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.digit-selector {
+  width: 60px;
+  height: 80px;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.08);
+  text-align: center;
+  cursor: grab;
+  transition: border 0.2s, transform 0.2s;
+}
+
+.digit-selector.scrolling {
+  transform: scale(1.05);
+}
+
+.digit-item {
+  height: 80px;
+  line-height: 80px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #f9fafb;
+}
+
+/* Submit button */
+.auth-submit-btn {
+  width: 100%;
+  padding: 0.85rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.75rem;
+  background: linear-gradient(90deg, #6366f1, #3b82f6);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.auth-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* Auth switch */
+.auth-switch-container {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+.auth-switch {
+  background: none;
+  border: none;
+  color: #6366f1;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 0.25rem;
+  transition: color 0.2s;
+}
+
+.auth-switch:hover {
+  color: #818cf8;
+}
+.passcode-mobile { display: none; }
+.passcode-desktop { display: flex; }
+/* Animations */
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 1.5rem;
+  }
+  .digit-selector {
+    width: 50px;
+    height: 70px;
+  }
+  .digit-item {
+    height: 70px;
+    line-height: 70px;
+    font-size: 1.6rem;
+  }
+  .passcode-desktop { display: none !important; }
+  .passcode-mobile { display: block; }
+}

@@ -1,0 +1,46 @@
+/* Force horizontal scroll and full visibility of columns */
+.responsive-table {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+/* Limit total table width but preserve all columns */
+.fixed-width-table {
+  width: max-content; /* ensures all columns are kept */
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  background: white;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+/* Slightly reduce padding so columns fit better */
+.fixed-width-table th,
+.fixed-width-table td {
+  padding: 8px 10px;
+  white-space: nowrap;   /* Keep content on one line */
+  border-bottom: 1px solid #ddd;
+}
+
+/* Table header styling */
+.fixed-width-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Highlight BUY and SELL rows */
+.row-buy {
+  background-color: #1f51db !important; /* Light blue */
+  color: #f5f5f5;
+}
+
+.row-sell {
+  background-color: #db2f2f !important; /* Light red */
+  color: #f5f5f5;
+}

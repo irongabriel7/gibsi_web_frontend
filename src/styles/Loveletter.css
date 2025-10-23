@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&family=Quicksand:wght@400;500&display=swap');
+
+/* === BACKGROUND & MAIN BOX === */
+.love-bg {
+  background: radial-gradient(circle at center, #0b0014 0%, #000010 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.love-border-box {
+  position: relative;
+  border: 2px solid #ff4da6;
+  box-shadow: 0 0 20px #ff007f, inset 0 0 15px #ff4da6;
+  border-radius: 20px;
+  padding: 40px 50px;
+  background: rgba(20, 0, 30, 0.6);
+  backdrop-filter: blur(8px);
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+  transition: all 0.3s ease;
+  animation: appearBox 1s ease forwards;
+}
+
+@keyframes appearBox {
+  from { opacity: 0; transform: translateY(40px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* === TITLE === */
+.love-title {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2.8em;
+  color: #ff7ab8;
+  margin-bottom: 10px;
+  text-shadow: 0 0 15px #ff8ac5, 0 0 30px #ff1a8c;
+  letter-spacing: 1px;
+}
+
+/* === CONTENT CONTAINER === */
+.love-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* === HEART === */
+.heart-container {
+  width: 200px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.heart-container:hover {
+  transform: scale(1.05);
+}
+
+.heart-beat {
+  animation: heartbeat 0.8s ease-in-out;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.25); }
+  50% { transform: scale(0.9); }
+  75% { transform: scale(1.1); }
+}
+
+.neon-heart-svg {
+  width: 220px;
+  height: 220px;
+  filter: drop-shadow(0 0 12px #ff4da6);
+}
+
+/* === MESSAGE TEXT === */
+
+
+.love-message {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1.2em;
+  color: #ffffff;
+  margin-top: 25px;
+  line-height: 1.7em;
+  white-space: pre-line;
+  text-shadow: 0 0 8px rgba(255, 105, 180, 0.4);
+}
+
+.fade-in {
+  opacity: 1;
+  transform: scale(1);
+  animation: fadeIn 1s ease;
+}
+
+.fade-out {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* === LETTER-BY-LETTER ANIMATION === */
+.letter {
+  display: inline-block;
+  opacity: 0;
+  animation: fadeInLetter 0.4s forwards;
+  transform: translateY(5px);
+}
+
+@keyframes fadeInLetter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === FLOATING HEARTS === */
+.floating-heart {
+  position: absolute;
+  bottom: 30px;
+  font-size: 26px;
+  opacity: 0.9;
+  animation: floatUp 3s ease-in-out forwards;
+  text-shadow: 0 0 10px #ff4da6;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  40% { transform: translateY(-120px) scale(1.2); opacity: 0.9; }
+  100% { transform: translateY(-350px) scale(1.5); opacity: 0; }
+}
+
+/* === FINAL SPECIAL GLOW (OPTIONAL for step 3) === */
+.love-border-box.final-glow {
+  box-shadow: 0 0 30px #ff66cc, inset 0 0 25px #ff1a8c;
+  animation: pulseGlow 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes pulseGlow {
+  from { box-shadow: 0 0 25px #ff4da6, inset 0 0 15px #ff1a8c; }
+  to { box-shadow: 0 0 45px #ff80b3, inset 0 0 25px #ff66cc; }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 480px) {
+  .love-border-box {
+    padding: 25px;
+    width: 90%;
+  }
+
+  .love-title {
+    font-size: 2em;
+  }
+
+  .love-message {
+    font-size: 1em;
+  }
+
+  .neon-heart-svg {
+    width: 170px;
+    height: 170px;
+  }
+}

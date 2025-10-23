@@ -1,0 +1,368 @@
+/* Global container */
+.live-gainers-container {
+  padding: 10px;
+  font-family: "Segoe UI", sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+/* Central content block */
+.content-wrapper {
+  width: 100%;
+  max-width: 900px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+/* Header title */
+.header h2 {
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Market banner */
+.market-banner {
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.market-banner.open {
+  background-color: #e7f9ee;
+  color: #27ae60;
+}
+
+.market-banner.closed {
+  background-color: #fcebea;
+  color: #c0392b;
+}
+
+.market-status {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.market-details {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  color: #444;
+  gap: 2px;
+}
+
+/* Digital clock */
+.clock {
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #444;
+  position: absolute;
+  top: 12px;
+  right: 20px;
+  background: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Header relative positioning so clock stays inside */
+.header {
+  position: relative;
+}
+
+/* Table */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.stock-table th,
+.stock-table td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  white-space: nowrap;
+}
+
+.stock-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+}
+
+/* Row highlight */
+.stock-table tr.gain {
+  background-color: #eafaf1;
+}
+
+.stock-table tr.loss {
+  background-color: #fdecea;
+}
+
+/* No data / closed messages */
+.no-data,
+.closed-msg,
+.loading-msg {
+  text-align: center;
+  color: #777;
+  font-size: 1rem;
+  margin-top: 25px;
+}
+
+/* Signal badges */
+.signal-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  display: inline-block;
+  text-align: center;
+  min-width: 60px;
+  text-transform: uppercase;
+}
+
+/* Pulse animation for BUY/SELL */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.signal-badge.buy {
+  background-color: #2962ff;
+  color: white;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.signal-badge.sell {
+  background-color: #d50000;
+  color: white;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.signal-badge.hold {
+  background-color: #ffab00;
+  color: black;
+  animation: none;
+}
+
+/* Pagination (if reused later) */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.pagination-controls button {
+  padding: 0.45rem 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.pagination-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-input-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.page-input-form input[type="number"] {
+  width: 70px;
+  padding: 0.4rem;
+}
+
+/* 📱 Responsive Design */
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: 15px;
+  }
+
+  .header h2 {
+    font-size: 1.3rem;
+  }
+
+  .market-banner {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .clock {
+    top: 10px;
+    right: 15px;
+    font-size: 0.85rem;
+    padding: 3px 7px;
+  }
+
+  .stock-table th,
+  .stock-table td {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+
+  .signal-badge {
+    font-size: 0.75rem;
+    min-width: 50px;
+    padding: 3px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header h2 {
+    font-size: 1.1rem;
+  }
+
+  .market-banner {
+    font-size: 0.85rem;
+  }
+
+  .clock {
+    top: 8px;
+    right: 12px;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+  }
+
+  .stock-table th,
+  .stock-table td {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+
+  .signal-badge {
+    font-size: 0.7rem;
+    min-width: 45px;
+  }
+}
+
+/*--- Existing Responsive Queries improved ---*/
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: 10px;
+  }
+  .header h2 {
+    font-size: 5vw; /* font size adapts to viewport width */
+  }
+  .market-banner {
+    font-size: 3.7vw;
+    padding: 8px;
+  }
+  .clock {
+    font-size: 3vw;
+    padding: 2px 5px;
+  }
+  .stock-table th,
+  .stock-table td {
+    padding: 6px 7px;
+    font-size: 3.2vw;
+    /* Prevent overflow/overlap */
+    word-break: break-word;
+    max-width: 120px;
+  }
+  .signal-badge {
+    font-size: 2.8vw;
+    min-width: 30px;
+    padding: 2px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-wrapper {
+    padding: 4px;
+  }
+  .header h2 {
+    font-size: 1rem;
+  }
+  .market-banner {
+    font-size: 0.74rem;
+    padding: 6px;
+  }
+  .clock {
+    font-size: 0.7rem;
+    padding: 1px 4px;
+  }
+  .stock-table th,
+  .stock-table td {
+    padding: 3px 4px;
+    font-size: 0.68rem;
+    max-width: 78px;
+    word-break: break-word;
+  }
+  .signal-badge {
+    font-size: 0.65rem;
+    min-width: 19px;
+    padding: 1px 4px;
+  }
+}
+
+/* ULTRA-SMALL MOBILE (e.g., iPhone SE, below 375px) */
+@media (max-width: 375px) {
+  .header h2 {
+    font-size: 0.61rem;
+    gap: 4px;
+  }
+  .market-banner {
+    font-size: 0.60rem;
+    padding: 1px;
+  }
+  .clock {
+    font-size: 0.62rem;
+    padding: 0 1.5px;
+  }
+  .stock-table th,
+  .stock-table td {
+    font-size: 0.49rem;
+    padding: 2px 1.5px;
+    max-width: 50px;
+  }
+  .signal-badge {
+    font-size: 0.48rem;
+    min-width: 11px;
+    padding: 0 2px;
+  }
+}
+
+/* Ensure always scrollable horizontally in table wrapper so no overlap on mobile */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+/* Guarantee table cells break words nicely (prevents overflow/overlap for long content) */
+.stock-table td,
+.stock-table th {
+  word-break: break-word;
+}

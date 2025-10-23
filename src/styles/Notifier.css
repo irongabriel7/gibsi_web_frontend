@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&display=swap');
+
+.notifier-bg {
+  min-height: 100vh;
+  background: radial-gradient(circle at 20% 30%, #0ff2c3 0%, #201b32 80%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Orbitron', 'Montserrat', 'Roboto', Arial, sans-serif;
+  padding: 0 0.5rem;
+}
+.notifier-form {
+  z-index: 2;
+  width: 100%;
+  max-width: 400px;
+  background: rgba(36, 44, 90, 0.85);
+  border: 1.5px solid #45ffe2;
+  border-radius: 18px;
+  padding: 36px 30px 24px;
+  box-shadow: 0 0 24px 0 #00ffc881;
+  backdrop-filter: blur(7px);
+  display: flex;
+  flex-direction: column;
+}
+.notifier-heading {
+  text-align: center;
+  margin-bottom: 28px;
+  font-size: 26px;
+  color: #45ffe2;
+  letter-spacing: 1.7px;
+  font-weight: 600;
+  text-shadow: 0 0 8px #0ff2c3, 0 2px 24px #0ff;
+}
+.notifier-field {
+  margin-bottom: 18px;
+}
+.notifier-label {
+  color: #e8fcff;
+  margin-bottom: 4px;
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+  text-shadow: 0 0 4px #0ff2c399;
+}
+.notifier-input, .notifier-textarea {
+  width: 100%;
+  padding: 11px 13px;
+  border-radius: 7px;
+  border: 1.5px solid #45ffe299;
+  font-size: 17px;
+  background: #1e2240;
+  color: #aaf8f6;
+  margin-top: 2px;
+  outline: none;
+  box-shadow: 0 0 6px #4effe2a0;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+.notifier-textarea {
+  min-height: 80px;
+  font-size: 16px;
+  color: #e8ffff;
+  font-family: 'Orbitron', 'Montserrat', 'Roboto', Arial, sans-serif;
+  resize: vertical;
+}
+.notifier-btn {
+  margin-top: 16px;
+  padding: 12px 0;
+  font-size: 17px;
+  color: #262342;
+  font-family: 'Orbitron', Arial, sans-serif;
+  border-radius: 7px;
+  background: linear-gradient(90deg, #0ff2c3 20%, #17fcbd 80%);
+  border: none;
+  box-shadow: 0 0 12px #37ffe6,0 2px 16px #26234280;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 1px;
+  outline: none;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.notifier-btn.disabled {
+  color: #626688;
+  background: linear-gradient(90deg, #335a57 0%, #224a43 100%);
+  cursor: not-allowed;
+}
+.notifier-status {
+  margin-top: 17px;
+  text-align: center;
+  color: #65ffde;
+  font-weight: 500;
+  text-shadow: 0 0 4px #00fff043;
+  font-family: 'Orbitron', Arial, sans-serif;
+}
+.notifier-glow {
+  position: absolute;
+  z-index: 0;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  top: 13%;
+  left: 58%;
+  pointer-events: none;
+  transform: translate(-58%, -5%);
+  filter: blur(60px);
+  background: radial-gradient(circle, #19ffe1a2 0%, #3a199bcc 80%, #0ff2c300 100%);
+  opacity: 0.47;
+  animation: scifi-glow 3.4s infinite alternate;
+}
+
+.notifier-select {
+  width: 100%;
+  padding: 11px 13px;
+  border-radius: 7px;
+  border: 1.5px solid #45ffe299;
+  font-size: 16px;
+  background: #1e2240;
+  color: #aaf8f6;
+  margin-top: 2px;
+  margin-bottom: 8px;
+  outline: none;
+  box-shadow: 0 0 6px #4effe2a0;
+  transition: border 0.2s, box-shadow 0.2s;
+  font-family: 'Orbitron', 'Montserrat', 'Roboto', Arial, sans-serif;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='aaf8f6' height='18' viewBox='0 0 24 24' width='18' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 18px 18px;
+}
+
+.notifier-select:focus {
+  border-color: #0ff2c3;
+  box-shadow: 0 0 0 3px #02ffe622;
+}
+
+/* Option style for better visibility */
+.notifier-select option {
+  color: #282442;
+  background: #e7f7fc;
+  font-size: 15px;
+  padding: 6px;
+}
+@keyframes scifi-glow {
+  0% { opacity: 0.47; }
+  100% { opacity: 0.66; }
+}
+
+/* RESPONSIVE: For phones */
+@media (max-width: 520px) {
+  .notifier-form {
+    max-width: 98vw;
+    padding: 16px 6px 14px;
+    border-radius: 12px;
+  }
+  .notifier-heading {
+    font-size: 19px;
+    margin-bottom: 16px;
+  }
+  .notifier-input, .notifier-textarea {
+    font-size: 15px;
+    padding: 8px 8px;
+    border-radius: 5px;
+  }
+  .notifier-btn {
+    font-size: 15px;
+    padding: 10px 0;
+    border-radius: 5px;
+  }
+  .notifier-status {
+    font-size: 14px;
+    margin-top: 12px;
+  }
+  .notifier-glow {
+    width: 220px;
+    height: 220px;
+    top: 2%;
+    left: 70%;
+  }
+}

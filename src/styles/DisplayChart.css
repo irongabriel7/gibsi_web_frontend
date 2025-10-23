@@ -1,0 +1,284 @@
+/* === DisplayChart.css === */
+.displaychart-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.displaychart-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.displaychart-controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.displaychart-chart-wrapper {
+  height: 400px;
+  margin-bottom: 30px;
+}
+
+.displaychart-bottom-section {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.displaychart-metrics,
+.displaychart-signals {
+  flex: 1;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.05);
+}
+
+.displaychart-board {
+  max-width: 1200px;
+  margin: 32px auto 0 auto;
+  padding: 40px 36px 26px 36px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 6px 32px 0 rgba(20, 60, 109, 0.10),0 1.5px 9px 0 rgba(30,34,46,0.06);
+  min-height: 690px;
+  position: relative;
+}
+
+.displaychart-title-bar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.displaychart-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f325a;
+  letter-spacing: 1px;
+}
+
+.displaychart-controls {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+}
+
+.displaychart-controls select,
+.displaychart-controls input[type="date"],
+.displaychart-controls button {
+  padding: 7px 18px;
+  border-radius: 8px;
+  font-size: 1.07rem;
+  border: 1px solid #b0bec5;
+  background: #f4f8fb;
+  transition: border 0.2s;
+  outline: none;
+}
+.displaychart-controls button {
+  background: #1976d2;
+  color: #fff;
+  font-weight: 500;
+  border: none;
+  transition: background 0.2s;
+}
+.displaychart-controls button:hover {
+  background: #1159aa;
+}
+
+.displaychart-chart-panel {
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.displaychart-row {
+  display: flex;
+  gap: 32px;
+}
+
+.displaychart-col {
+  flex: 1;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 22px 24px 14px 24px;
+  border: 1px solid #e2ecf5;
+  box-shadow: 0 1.5px 5px 0 rgba(30,34,46,0.03);
+  min-width: 0;
+}
+
+.displaychart-section-title {
+  font-size: 1.13rem;
+  font-weight: 600;
+  color: #1976d2;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.displaychart-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.displaychart-table th,
+.displaychart-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.displaychart-metrics {
+  display: flex;
+  justify-content: space-around;
+  margin: 15px 0;
+}
+
+.displaychart-card {
+  padding: 12px 18px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.displaychart-label {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.displaychart-value {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #111;
+}
+
+.displaychart-card.gain .displaychart-value {
+  color: green;
+}
+
+.displaychart-card.loss .displaychart-value {
+  color: red;
+}
+
+.displaychart-buy {
+  color: red;
+  font-weight: bold;
+}
+
+.displaychart-sell {
+  color: green;
+  font-weight: bold;
+}
+
+.displaychart-signals {
+  margin-top: 20px;
+  padding: 16px;
+  border-top: 1px solid #eee;
+}
+
+.displaychart-empty {
+  color: #888;
+  font-style: italic;
+  padding: 10px;
+}
+.displaychart-metric-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.displaychart-metric-card {
+  flex: 1 1 45%;
+  background: white;
+  border-radius: 10px;
+  padding: 12px 16px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.displaychart-metric-card .label {
+  font-size: 14px;
+  color: #888;
+}
+
+.displaychart-metric-card .value {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+/* Chart legend and tooltip tweaks */
+.chartjs-render-monitor ~ .chart-legend {
+  margin-top: 18px;
+  text-align: right;
+}
+/* Modern button styles */
+.button {
+  background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+  color: #fff;
+  padding: 0.6em 1.0em;
+  border-radius: 0.5em;
+  border: none;
+  font-weight: 500;
+  font-size: 1.05em;
+  box-shadow: 0 2px 20px rgba(59,130,246, 0.14);
+  transition: background 0.2s, box-shadow 0.15s, transform 0.15s;
+  cursor: pointer;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.button:active, .button:focus {
+  background: linear-gradient(90deg, #2563eb 40%, #1e40af 100%);
+  box-shadow: 0 2px 28px rgba(37,99,235,0.18);
+  transform: translateY(1px) scale(0.98);
+}
+
+.button:hover {
+  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+  box-shadow: 0 6px 32px -8px #3b82f6;
+  transform: scale(1.03);
+}
+
+.button[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.button.cancel {
+  background: linear-gradient(90deg, #ef4444 0%, #f59e0b 100%);
+  color: #fff;
+  margin-left: 0.75em; /* spacing to the left */
+  box-shadow: 0 2px 20px rgba(245,158,11, 0.10);
+}
+
+.button.cancel:active,
+.button.cancel:focus {
+  background: linear-gradient(90deg, #dc2626 30%, #ea580c 100%);
+  box-shadow: 0 2px 28px rgba(220,38,38,0.14);
+  transform: translateY(1px) scale(0.98);
+}
+
+.button.cancel:hover {
+  background: linear-gradient(90deg, #f59e0b 0%, #ef4444 100%);
+  box-shadow: 0 6px 32px -8px #ef4444;
+  transform: scale(1.03);
+}
+.error-message {
+  color: #ef4444;
+  background: #fbeaea;
+  font-weight: 500;
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+  margin-top: 5px;
+  font-size: 0.97em;
+  letter-spacing: -0.2px;
+  box-shadow: 0 1px 4px rgba(236,72,153,0.05);
+}

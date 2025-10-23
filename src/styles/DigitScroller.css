@@ -1,0 +1,157 @@
+.passcode-container {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  border-radius: 18px;
+  border: 4px solid transparent;
+  box-shadow: 0 0 0px #111;
+  transition: box-shadow 0.3s, border 0.3s;
+}
+.passcode-container.correct {
+  border-color: #31ff60;
+  box-shadow: 0 0 30px 5px #00ffbb, 0 0 40px 10px #3aff9d66 inset;
+  animation: neon-green 1s infinite alternate;
+}
+.passcode-container.wrong {
+  border-color: #ff1a1a;
+  box-shadow: 0 0 28px 5px #ff008e, 0 0 40px 10px #ff0d4691 inset;
+  animation: neon-red 1s infinite alternate;
+}
+@keyframes neon-green {
+  to { box-shadow: 0 0 40px 15px #00ffc3, 0 0 60px 35px #2dff72c0 inset; }
+}
+@keyframes neon-red {
+  to { box-shadow: 0 0 38px 15px #ff0055, 0 0 60px 30px #fe2c6d91 inset; }
+}
+
+.digit-selector {
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  background: linear-gradient(145deg, #5a5a5a, #2e2e2e);
+  border: 3px solid #999;
+  border-radius: 12px;
+  box-shadow: inset -3px -3px 7px rgba(255,255,255,0.2),
+              inset 3px 3px 7px rgba(0,0,0,0.5);
+  position: relative;
+  perspective: 600px;  /* Adds 3D depth */
+}
+
+.digit-list {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1); /* Smooth ease-out scroll */
+}
+
+.digit-item {
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  user-select: none;
+  text-shadow: 0 0 2px rgb(0, 0, 0), 0 0 10px rgba(0,0,0,0.5);
+  transform: rotateX(0deg) translateZ(40px);  /* Pushed outwards for cylinder effect */
+  backface-visibility: hidden;
+}
+
+/* Gradient mask for top & bottom fade */
+.digit-selector::before,
+.digit-selector::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 30%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.digit-selector::before {
+  top: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+}
+
+.digit-selector::after {
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+}
+
+.digit-selector.entering {
+  border-color: #00e6e6;
+  box-shadow:
+    0 0 14px #1361ff,
+    0 0 30px #222bb988 inset;
+  animation: neon-blue 1.2s infinite alternate;
+}
+
+@keyframes neon-blue {
+  0% { box-shadow: 0 0 14px #1361ff, 0 0 30px #222bb988 inset; }
+  100% { box-shadow: 0 0 26px #00e6e6, 0 0 44px #353bff99 inset; }
+}
+/* Keep your .correct, .wrong as before */
+.digit-selector.correct {
+  border-color: #00ff00;
+  box-shadow: 0 0 15px #00ff00, inset 0 0 15px #00ff00;
+}
+.digit-selector.wrong {
+  border-color: #ff1a1a;
+  box-shadow: 0 0 15px #ff1a1a, inset 0 0 15px #ff1a1a;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 800px) {
+  .passcode-container {
+    gap: 0.7rem;
+    margin-top: 1.2rem;
+    border-radius: 12px;
+    padding: 2px;
+  }
+  .digit-selector {
+    width: 52px;
+    height: 52px;
+    border-radius: 8px;
+    border-width: 2px;
+    box-shadow: inset -2px -2px 4px rgba(255,255,255,0.2),
+                inset 2px 2px 4px rgba(0,0,0,0.5);
+    perspective: 350px;
+  }
+  .digit-item {
+    height: 52px;
+    font-size: 1.45rem;
+    transform: rotateX(0deg) translateZ(26px);
+  }
+  .digit-selector::before,
+  .digit-selector::after {
+    height: 24%;
+  }
+}
+
+@media (max-width: 480px) {
+  .passcode-container {
+    gap: 0.4rem;
+    margin-top: 0.7rem;
+    border-radius: 8px;
+    padding: 0px;
+  }
+  .digit-selector {
+    width: 32px;
+    height: 32px;
+    border-radius: 5px;
+    border-width: 1.5px;
+    box-shadow: inset -1px -1px 2.5px rgba(255,255,255,0.18),
+                inset 1px 1px 2.5px rgba(0,0,0,0.29);
+    perspective: 180px;
+  }
+  .digit-item {
+    height: 32px;
+    font-size: 0.9rem;
+    transform: rotateX(0deg) translateZ(16px);
+  }
+  .digit-selector::before,
+  .digit-selector::after {
+    height: 16%;
+  }
+}
