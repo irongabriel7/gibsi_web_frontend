@@ -5,7 +5,7 @@ import "../styles/Loading.css";
 import "../styles/DisplayChart.css";
 import "../styles/Profile.css";
 
-export default function ProfilePage({ gid = null, isAdmin = false, onClose = () => {} }) {
+export default function ProfilePage({ gid = null, isAdmin = false, onClose = () => {}, onDelete}) {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -133,6 +133,13 @@ export default function ProfilePage({ gid = null, isAdmin = false, onClose = () 
     }
   };
 
+  const handleDeleteUser = () => {
+    if (!window.confirm("Are you sure you want to delete this user? This cannot be undone.")) return;
+    if (onDelete && typeof onDelete === "function") {
+      onDelete(profile.gid);
+    }
+  };
+
   if (loading) {
     return <div className="loading">Loading profile...</div>;
   }
@@ -158,6 +165,13 @@ export default function ProfilePage({ gid = null, isAdmin = false, onClose = () 
           {isAdmin ? (
             <>
               <div className="form-group">
+                <button
+                  className="action-btn"
+                  style={{ backgroundColor: "#ef4444", marginTop: "1rem" }}
+                  onClick={handleDeleteUser}
+                >
+                  🗑️ Delete User
+                </button>
                 <label htmlFor="username">Username</label>
                 <input
                   id="username"

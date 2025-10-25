@@ -1,10 +1,15 @@
 .gibsi-about-bg {
   background: linear-gradient(120deg, #181d36 0%, #ffffff 100%);
-  min-height: 100vh;
+  min-height: 60vh;
+  width: 100%;
   position: relative;
+  transform: translateY(-64px);
   box-shadow: 0 0 40px 20px #1aa6eb22 inset;
   overflow: hidden;
+  margin-left: 0;
+  margin-bottom: 0;
 }
+
 .gibsi-overlay {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -12,16 +17,20 @@
   opacity: 0.10;
   z-index: 1;
 }
+
 .gibsi-content {
   position: relative;
-  z-index: 10;
+  z-index: 1;
   max-width: 900px;
-  margin: 70px auto;
+  margin: 20px auto;
   padding: 55px 48px 45px 48px;
   border-radius: 22px;
   background: rgba(33,29,61,0.97);
   box-shadow: 0 0 18px 6px #30a4e820, 0 0 0 2px #23bbf2;
 }
+
+/* Desktop styles remain as default */
+
 .neon-title {
   font-size: 3.8rem;
   text-shadow: 0 0 3px #1caed7, 0 0 5px #ae74fc;
@@ -31,6 +40,7 @@
   margin-bottom: 10px;
   font-weight: 800;
 }
+
 .slogan {
   font-size: 1.7rem;
   margin-top: 5px;
@@ -41,6 +51,7 @@
   font-weight: 600;
   text-shadow: none;
 }
+
 .about-text {
   color: #f6f8ff;
   font-size: 1.35rem;
@@ -49,6 +60,7 @@
   margin-bottom: 18px;
   text-shadow: none;
 }
+
 .note-text {
   color: #e0f9ff;
   font-size: 1.15rem;
@@ -61,19 +73,23 @@
   text-align: center;
   font-weight: 600;
 }
+
 .highlight {
   color: #1fcad1;
   font-weight: bold;
   text-shadow: none;
 }
+
 .quote {
   font-style: italic;
   color: #29ccec;
 }
+
 .mission {
   color: #fff08c;
   font-weight: 500;
 }
+
 .section-title {
   font-size: 1.35rem;
   margin-top: 23px;
@@ -81,114 +97,140 @@
   color: #29b2fc;
   font-family: 'Orbitron', 'Trebuchet MS', sans-serif;
   font-weight: 700;
-  text-shadow: none;
 }
+
 .features-list {
   list-style: square inside;
   margin-top: 12px;
   margin-bottom: 20px;
   font-size: 1.15rem;
 }
+
 .features-list li {
   margin-bottom: 11px;
   color: #a9fda5;
   font-family: 'Roboto Mono', monospace;
-  text-shadow: none;
   font-size: 1.08rem;
 }
+
+/* Background chart overlay */
 .chart-back {
   position: absolute;
   z-index: 2;
   top: 0; left: 0; right: 0; bottom: 0;
   pointer-events: none;
-  background-image: url('https://cdn.pixabay.com/photo/2016/09/14/16/36/stock-1665470_1280.png'); /* replace with a muted chart image if needed */
+  background-image: url('https://cdn.pixabay.com/photo/2016/09/14/16/36/stock-1665470_1280.png');
   opacity: 0.05;
   background-size: cover;
   background-position: center;
 }
 
+/* Responsive styles for max-width 800px (tablet/mobile) */
 @media (max-width: 800px) {
   .gibsi-content {
-    max-width: 97vw;
+    max-width: 90%;
+    padding: 30px 20px;
+  }
+  .gibsi-content {
+    max-width: 40vw;
     margin: 32px auto;
     padding: 24px 10px 22px 10px;
     border-radius: 13px;
   }
+
   .neon-title {
     font-size: 2.1rem;
     margin-bottom: 6px;
     letter-spacing: 0.09em;
   }
+
   .slogan {
     font-size: 1.08rem;
     margin-top: 2px;
     margin-bottom: 12px;
     letter-spacing: 0.04em;
   }
+
   .about-text {
     font-size: 1.02rem;
     line-height: 1.7;
     margin-top: 10px;
     margin-bottom: 10px;
   }
+
   .note-text {
     font-size: 0.85rem;
     padding: 7px 11px;
     border-radius: 7px;
     margin-top: 16px;
   }
+
   .section-title {
     font-size: 1rem;
     margin-top: 12px;
     margin-bottom: 3px;
   }
+
   .features-list {
     font-size: 0.95rem;
     margin-bottom: 10px;
     margin-top: 6px;
   }
+
   .features-list li {
     font-size: 0.83rem;
     margin-bottom: 7px;
   }
 }
 
+/* Responsive styles for max-width 500px (mobile) */
 @media (max-width: 500px) {
+  .gibsi-content {
+    max-width: 95%;
+    padding: 15px 10px;
+  }
   .gibsi-content {
     padding: 7px 3px 7px 3px;
     margin: 7px auto;
     border-radius: 8px;
   }
+
   .neon-title {
     font-size: 1rem;
     margin-bottom: 2px;
   }
+
   .slogan {
     font-size: 0.76rem;
     margin-bottom: 5px;
   }
+
   .about-text {
     font-size: 0.67rem;
     margin-top: 6px;
     margin-bottom: 6px;
     line-height: 1.4;
   }
+
   .note-text {
     font-size: 0.6rem;
     padding: 3px 4px;
     border-radius: 5px;
     margin-top: 6px;
   }
+
   .section-title {
     font-size: 0.7rem;
     margin-top: 6px;
     margin-bottom: 1px;
   }
+
   .features-list {
     font-size: 0.76rem;
     margin-bottom: 5px;
     margin-top: 2px;
   }
+
   .features-list li {
     font-size: 0.64rem;
     margin-bottom: 3px;

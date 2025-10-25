@@ -8,9 +8,19 @@ const SIGNAL_COLORS = {
   BUY: "#2e7d32",
 };
 
-function formatTime(date) {
-  // date is a JS Date object now
+// Parse backend date to JS Date
+function parseBackendDate(dateObj) {
+  if (!dateObj) return null;
+  const isoString = dateObj.$date;
+  if (!isoString) return null;
+  return new Date(isoString);
+}
+
+// Convert to 12-hour AM/PM time display
+function formatTo12Hour(date) {
+  if (!date) return "-";
   return date.toLocaleTimeString("en-IN", {
+    hour12: true,
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
@@ -24,15 +34,16 @@ export default function IntraGainerDashboard() {
   const [lastTradingDay, setLastTradingDay] = useState("");
   const [nextMarketOpenTime, setNextMarketOpenTime] = useState("");
   const [loading, setLoading] = useState(true);
-
-  // Store server IST time as Date object
   const [currentTime, setCurrentTime] = useState(null);
+  const [initialLoad, setInitialLoad] = useState(true);
+
   const serverTimeRef = useRef(null);
+  const scrollYRef = useRef(window.scrollY);
 
   useEffect(() => {
     fetchSignals();
 
-    // Update server time every second by adding 1 second (simulate clock)
+    // Start local clock sync
     const clockInterval = setInterval(() => {
       if (serverTimeRef.current) {
         serverTimeRef.current = new Date(serverTimeRef.current.getTime() + 1000);
@@ -40,8 +51,11 @@ export default function IntraGainerDashboard() {
       }
     }, 1000);
 
-    // Refresh signals every 30 sec to get fresh server time & data
-    const fetchInterval = setInterval(fetchSignals, 30000);
+    // Refresh every 30 seconds
+    const fetchInterval = setInterval(() => {
+      scrollYRef.current = window.scrollY; // Save scroll position
+      fetchSignals(false); // silent refresh
+    }, 30000);
 
     return () => {
       clearInterval(clockInterval);
@@ -49,59 +63,64 @@ export default function IntraGainerDashboard() {
     };
   }, []);
 
-  async function fetchSignals() {
-    setLoading(true);
+  async function fetchSignals(showLoading = true) {
+    if (showLoading) setLoading(true);
     try {
       const marketResp = await api.get("/api/market_update");
       const marketData = marketResp.data;
-
       setMarketOpen(marketData.is_market_open);
       setLastTradingDay(marketData.last_trading_day);
       setNextMarketOpenTime(marketData.next_market_open);
 
-      // Parse server_time_ist string like "2025-10-19 21:36:00" in IST as Date object
-      // Treat as local time because IST is fixed offset +5:30
       if (marketData.server_time_ist) {
-        // Replace space with 'T' and append ':00+05:30' for proper JS parsing
-        const isoString = marketData.server_time_ist.replace(" ", "T") + "+05:30";
-        const serverDate = new Date(isoString);
+        const serverDate = new Date(marketData.server_time_ist.replace(" ", "T") + "+05:30");
         serverTimeRef.current = serverDate;
         setCurrentTime(serverDate);
       }
 
-      const signalsResp = await api.get("/api/live_intraday_gainers");
+      const signalsResp = await api.get("/api/live_intra_gainers");
       const signalsData = signalsResp.data;
 
-      const buys = [];
-      const sells = [];
+      const newBuys = [];
+      const newSells = [];
 
       (signalsData.stocks || []).forEach((s) => {
-        if (s.signal === "BUY") {
-          buys.push({
-            ticker: s.symbol || s.ticker,
-            time: s.buy_time || s.Datetime || null,
-            price: s.buy_price || s.price || s.Adj_Close,
-            reasons: s.reasons || "",
+        if (s.buy_time) {
+          newBuys.push({
+            ticker: s.ticker || s.symbol,
+            time: parseBackendDate(s.buy_time),
+            price: s.buy_price,
+            status: "BUY",
           });
-        } else if (s.signal === "SELL" || s.signal === "CLOSED") {
-          sells.push({
-            ticker: s.symbol || s.ticker,
-            time: s.sell_time || s.Datetime || null,
-            price: s.sell_price || s.price || s.Adj_Close,
-            reasons: s.reason || s.reasons || "",
-            status: s.signal,
+        }
+        if (s.signal === "SELL" && s.sell_time) {
+          newSells.push({
+            ticker: s.ticker || s.symbol,
+            sellTime: parseBackendDate(s.sell_time),
+            sellPrice: s.sell_price,
+            profit: s.profit_pct != null ? s.profit_pct.toFixed(2) : "-",
+            status: "SELL",
           });
         }
       });
 
-      setBuySignals(buys);
-      setSellSignals(sells);
+      // Update only if data actually changed
+      const buysChanged = JSON.stringify(newBuys) !== JSON.stringify(buySignals);
+      const sellsChanged = JSON.stringify(newSells) !== JSON.stringify(sellSignals);
+
+      if (buysChanged) setBuySignals(newBuys);
+      if (sellsChanged) setSellSignals(newSells);
+
+      // Smoothly restore scroll after update
+      if (!initialLoad) {
+        setTimeout(() => window.scrollTo({ top: scrollYRef.current, behavior: "smooth" }), 100);
+      } else {
+        setInitialLoad(false);
+      }
     } catch (error) {
       console.error("Failed to fetch signals:", error);
-      setBuySignals([]);
-      setSellSignals([]);
     } finally {
-      setLoading(false);
+      if (showLoading) setLoading(false);
     }
   }
 
@@ -114,7 +133,7 @@ export default function IntraGainerDashboard() {
             {marketOpen ? "🟢 Market Open" : "🔴 Market Closed"}
           </span>
           <span className="clock" style={{ marginLeft: 12 }}>
-            {currentTime ? formatTime(currentTime) : "..."}
+            {currentTime ? formatTo12Hour(currentTime) : "..."}
           </span>
         </div>
       </header>
@@ -126,7 +145,7 @@ export default function IntraGainerDashboard() {
         </section>
       )}
 
-      {loading ? (
+      {loading && initialLoad ? (
         <p className="loading-message">Loading signals...</p>
       ) : (
         <>
@@ -142,7 +161,7 @@ export default function IntraGainerDashboard() {
                     <th>Ticker</th>
                     <th>Buy Time</th>
                     <th>Buy Price</th>
-                    <th>Reasons</th>
+                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -150,10 +169,20 @@ export default function IntraGainerDashboard() {
                     <tr key={i}>
                       <td>{i + 1}</td>
                       <td>{s.ticker}</td>
-                      <td>{s.time ? formatTime(new Date(s.time)) : "-"}</td>
+                      <td>{s.time ? formatTo12Hour(s.time) : "-"}</td>
                       <td>₹{s.price?.toFixed(2)}</td>
-                      <td>
-                        <small className="reason-text">{s.reasons}</small>
+                      <td
+                        className="buy-status synced-blink"
+                        style={{
+                          color: "#fff",
+                          fontWeight: "700",
+                          backgroundColor: SIGNAL_COLORS.BUY,
+                          padding: "4px 8px",
+                          borderRadius: 4,
+                          textAlign: "center",
+                        }}
+                      >
+                        BUY
                       </td>
                     </tr>
                   ))}
@@ -174,8 +203,8 @@ export default function IntraGainerDashboard() {
                     <th>Ticker</th>
                     <th>Sell Time</th>
                     <th>Sell Price</th>
+                    <th>Profit %</th>
                     <th>Status</th>
-                    <th>Reason</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -183,13 +212,23 @@ export default function IntraGainerDashboard() {
                     <tr key={i}>
                       <td>{i + 1}</td>
                       <td>{s.ticker}</td>
-                      <td>{s.time ? formatTime(new Date(s.time)) : "-"}</td>
-                      <td>₹{s.price?.toFixed(2)}</td>
-                      <td style={{ color: SIGNAL_COLORS[s.status] || "#374151", fontWeight: "700" }}>
-                        {s.status}
+                      <td>{s.sellTime ? formatTo12Hour(s.sellTime) : "-"}</td>
+                      <td>₹{s.sellPrice?.toFixed(2)}</td>
+                      <td style={{ color: s.profit >= 0 ? "green" : "red" }}>
+                        {s.profit !== "-" ? `${s.profit}%` : "-"}
                       </td>
-                      <td>
-                        <small className="reason-text">{s.reasons}</small>
+                      <td
+                        className="sell-status synced-blink"
+                        style={{
+                          color: "#fff",
+                          fontWeight: "700",
+                          backgroundColor: SIGNAL_COLORS.SELL,
+                          padding: "4px 8px",
+                          borderRadius: 4,
+                          textAlign: "center",
+                        }}
+                      >
+                        SELL
                       </td>
                     </tr>
                   ))}

@@ -17,22 +17,35 @@ import {
 } from "chart.js";
 import zoomPlugin from "chartjs-plugin-zoom";
 
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend, zoomPlugin, ScatterController);
+ChartJS.register(
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend,
+  zoomPlugin,
+  ScatterController
+);
 
 function getTimeAMPM(datetimeString) {
   if (!datetimeString) return "";
-  return new Date(datetimeString).toLocaleTimeString([], {
+  return new Date(datetimeString).toLocaleTimeString("en-IN", {
     hour: "numeric",
     minute: "2-digit",
-    hour12: true
+    hour12: true,
+    timeZone: "Asia/Kolkata"
   });
 }
 
 export default function DisplayChart() {
-  const [tickers, setTickers] = useState([]);
+  // Stock list for dropdown
+  const [stocksList, setStocksList] = useState([]);
+
+  // States for data and UI
   const [ticker, setTicker] = useState("");
   const [stockId, setStockId] = useState(null);
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(""); // YYYY-MM-DD format
 
   const [intradayData, setIntradayData] = useState([]);
   const [historicalData, setHistoricalData] = useState([]);
@@ -43,12 +56,13 @@ export default function DisplayChart() {
   const [error, setError] = useState("");
   const [initialLoading, setInitialLoading] = useState(true);
 
+  // Load stocks list on mount
   useEffect(() => {
-    async function loadStocks() {
+    async function fetchStocks() {
       try {
         const res = await api.get("/api/stocks_list");
         if (Array.isArray(res.data)) {
-          const stocksWithIds = res.data.map((item, idx) =>
+          const list = res.data.map((item, idx) =>
             typeof item === "string"
               ? { ticker: item, stock_id: idx + 1 }
               : {
@@ -56,31 +70,25 @@ export default function DisplayChart() {
                   stock_id: item.stock_id ?? item.id ?? idx + 1
                 }
           );
-          setTickers(stocksWithIds);
-          if (stocksWithIds.length > 0) {
-            setTicker(stocksWithIds[0].ticker);
-            setStockId(stocksWithIds[0].stock_id);
+          setStocksList(list);
+          if (list.length) {
+            setTicker(list[0].ticker);
+            setStockId(list[0].stock_id);
+            setDate(new Date().toISOString().slice(0, 10)); // default to today
           }
         } else {
           setError("Unexpected stocks list format");
         }
-      } catch (err) {
+      } catch {
         setError("Failed to load stock list");
       } finally {
         setInitialLoading(false);
       }
     }
-    loadStocks();
+    fetchStocks();
   }, []);
 
-  useEffect(() => {
-    setIntradayData([]);
-    setHistoricalData([]);
-    setOpenPositions([]);
-    setIntradayProfit(null);
-    setIntradayProfitPercent(null);
-  }, [ticker, date]);
-
+  // Fetch data API on stockId or date change
   useEffect(() => {
     if (!stockId || !date) return;
 
@@ -95,6 +103,7 @@ export default function DisplayChart() {
         setOpenPositions(data.open_positions || []);
         setIntradayProfit(data.intraday_profit_value ?? null);
         setIntradayProfitPercent(data.intraday_profit_percent ?? null);
+        setError("");
       } catch (err) {
         setError(`Error fetching data: ${err.message}`);
         setIntradayData([]);
@@ -106,22 +115,32 @@ export default function DisplayChart() {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 60000);
-    return () => clearInterval(interval);
   }, [stockId, date]);
 
+  // Chart data generation
   const getChartData = () => {
     if (!intradayData.length) return null;
 
-    const labels = intradayData.map(item => getTimeAMPM(item.datetime));
+    const labels = intradayData.map((item) =>
+      new Date(item.datetime).toLocaleTimeString("en-IN", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+        timeZone: "Asia/Kolkata"
+      })
+    );
     const closePoints = intradayData.map((item, idx) => ({ x: idx, y: item.close }));
 
-    // Build BUY and SELL points from open_positions
     const buySellPoints = [];
 
-    openPositions.forEach(pos => {
+    openPositions.forEach((pos) => {
       const addPoint = (time, type, color) => {
-        const timeLabel = getTimeAMPM(time);
+        const timeLabel = new Date(time).toLocaleTimeString("en-IN", {
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+          timeZone: "Asia/Kolkata"
+        });
         const idx = labels.indexOf(timeLabel);
         if (idx !== -1) {
           buySellPoints.push({
@@ -133,14 +152,11 @@ export default function DisplayChart() {
         }
       };
 
-      // If signal = CLOSED, show both BUY and SELL times
-      if (pos.signal === "CLOSED" || pos.signal === "SELL") {
-        if (pos.buy_time) addPoint(pos.buy_time, "BUY", "#22c55e");
-        if (pos.sell_time) addPoint(pos.sell_time, "SELL", "#ef4444");
-      } else if (pos.signal === "BUY" || pos.signal === "OPEN") {
-        if (pos.datetime) addPoint(pos.datetime, "BUY", "#22c55e");
-      } else if (pos.signal === "SELL") {
-        if (pos.datetime) addPoint(pos.datetime, "SELL", "#ef4444");
+      if (pos.signal === "CLOSED") {
+        if (pos.buy_time) addPoint(pos.buy_time, "BUY", "#ef4444");  // BUY in red
+        if (pos.sell_time) addPoint(pos.sell_time, "SELL", "#22c55e"); // SELL in green
+      } else if (pos.signal === "BUY") {
+        if (pos.buy_time) addPoint(pos.buy_time, "BUY", "#ef4444"); // BUY in red
       }
     });
 
@@ -151,8 +167,8 @@ export default function DisplayChart() {
           label: "BUY/SELL",
           data: buySellPoints,
           parsing: false,
-          pointBackgroundColor: buySellPoints.map(pt => pt.color),
-          pointBorderColor: buySellPoints.map(pt => pt.color),
+          pointBackgroundColor: buySellPoints.map((pt) => pt.color),
+          pointBorderColor: buySellPoints.map((pt) => pt.color),
           borderColor: "transparent",
           showLine: false,
           pointRadius: 8,
@@ -171,29 +187,6 @@ export default function DisplayChart() {
       ]
     };
   };
-
-  const calculateMetrics = () => {
-    if (!historicalData.length) {
-      return { profit_value: null, profit_percent: null, status: null };
-    }
-    const first = intradayData[0].open;
-    const last = intradayData[intradayData.length - 1].close;
-    const value = last - first;
-    const percent = (value / first) * 100;
-    return {
-      profit_value: value,
-      profit_percent: percent,
-      status: value >= 0 ? "GAIN" : "LOSS"
-    };
-  };
-
-  // Existing daily status
-  const dailyMetrics = historicalData.length ? historicalData[0] : calculateMetrics();
-
-  // New intraday status
-  const intradayStatus = intradayProfit != null
-    ? (intradayProfit >= 0 ? "GAIN" : "LOSS")
-    : null;
 
   const chartConfig = getChartData();
 
@@ -218,39 +211,55 @@ export default function DisplayChart() {
           <select
             value={ticker}
             onChange={(e) => {
-              const selected = tickers.find(s => s.ticker === e.target.value);
-              setTicker(selected?.ticker || "");
-              setStockId(selected?.stock_id || null);
+              const selected = stocksList.find((s) => s.ticker === e.target.value);
+              setTicker(e.target.value);
+              setStockId(selected ? selected.stock_id : null);
             }}
-            disabled={tickers.length === 0}
+            disabled={stocksList.length === 0}
           >
             <option value="">Select stock</option>
-            {tickers.map((s, i) => (
-              <option key={i} value={s.ticker}>{s.ticker}</option>
+            {stocksList.map((s, i) => (
+              <option key={i} value={s.ticker}>
+                {s.ticker}
+              </option>
             ))}
           </select>
           <input
             type="date"
             value={date}
+            max={new Date().toISOString().slice(0, 10)}
             onChange={(e) => setDate(e.target.value)}
           />
+          <button
+            className="button"
+            onClick={() => {
+              if (!stockId) setError("Please select a stock");
+              else if (!date) setError("Please select a date");
+              else setError("");
+            }}
+          >
+            Load Chart
+          </button>
         </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}
 
+      {/* Display metrics on top */}
       <div className="displaychart-metrics">
         <div className="displaychart-card">
-          <div className="displaychart-label">Profit ₹</div>
+          <div className="displaychart-label">Day Profit ₹</div>
           <div className="displaychart-value">
-            {dailyMetrics.profit_value != null ? dailyMetrics.profit_value.toFixed(2) : "-"}
+            {historicalData.length && historicalData[0].profit_value != null
+              ? historicalData[0].profit_value.toFixed(2)
+              : "-"}
           </div>
         </div>
         <div className="displaychart-card">
-          <div className="displaychart-label">Profit %</div>
+          <div className="displaychart-label">Day Profit %</div>
           <div className="displaychart-value">
-            {dailyMetrics.profit_percent != null
-              ? dailyMetrics.profit_percent.toFixed(2) + "%"
+            {historicalData.length && historicalData[0].profit_percent != null
+              ? historicalData[0].profit_percent.toFixed(2) + "%"
               : "-"}
           </div>
         </div>
@@ -263,18 +272,28 @@ export default function DisplayChart() {
         <div className="displaychart-card">
           <div className="displaychart-label">Intraday %</div>
           <div className="displaychart-value">
-            {intradayProfitPercent != null
-              ? intradayProfitPercent.toFixed(2) + "%"
-              : "-"}
+            {intradayProfitPercent != null ? intradayProfitPercent.toFixed(2) + "%" : "-"}
           </div>
         </div>
-        <div className={`displaychart-card ${dailyMetrics.status === "GAIN" ? "gain" : "loss"}`}>
-          <div className="displaychart-label">Status</div>
-          <div className="displaychart-value">{dailyMetrics.status || "-"}</div>
+        <div
+          className={`displaychart-card ${
+            historicalData.length && historicalData[0].status === "GAIN" ? "gain" : "loss"
+          }`}
+        >
+          <div className="displaychart-label">Overall Status</div>
+          <div className="displaychart-value">
+            {historicalData.length ? historicalData[0].status : "-"}
+          </div>
         </div>
-        <div className={`displaychart-card ${intradayStatus === "GAIN" ? "gain" : "loss"}`}>
+        <div
+          className={`displaychart-card ${
+            intradayProfit != null && intradayProfit >= 0 ? "gain" : "loss"
+          }`}
+        >
           <div className="displaychart-label">Intraday Status</div>
-          <div className="displaychart-value">{intradayStatus || "-"}</div>
+          <div className="displaychart-value">
+            {intradayProfit != null ? (intradayProfit >= 0 ? "GAIN" : "LOSS") : "-"}
+          </div>
         </div>
       </div>
 
@@ -290,22 +309,16 @@ export default function DisplayChart() {
                 plugins: {
                   legend: { labels: { font: { size: 14 } } },
                   tooltip: { mode: "index", intersect: false },
-                  zoom: {
-                    pan: { enabled: true, mode: "x" },
-                    zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: "x" }
-                  }
+                  zoom: { pan: { enabled: true, mode: "x" }, zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: "x" } }
                 },
                 scales: {
                   x: {
                     type: "category",
                     labels: chartConfig.labels,
                     ticks: { font: { size: 12 } },
-                    title: { display: true, text: "Time (AM/PM)" }
+                    title: { display: true, text: "Time (IST)" }
                   },
-                  y: {
-                    ticks: { font: { size: 12 } },
-                    title: { display: true, text: "Close Price" }
-                  }
+                  y: { ticks: { font: { size: 12 } }, title: { display: true, text: "Close Price" } }
                 }
               }}
             />
@@ -327,25 +340,28 @@ export default function DisplayChart() {
               </tr>
             </thead>
             <tbody>
-              {openPositions.map((pos, idx) => (
-                <tr key={idx}>
-                  <td>{getTimeAMPM(pos.datetime)}</td>
-                  <td
-                    className={`displaychart-${(pos.signal || "").toLowerCase()} ${
-                      pos.signal === "BUY" ? "blink" : ""
-                    }`}
-                  >
-                    {pos.signal
-                      ? pos.signal === "BUY"
-                        ? "📈 BUY"
-                        : "📉 SELL"
-                      : "—"}
-                  </td>
-                  <td>
-                    {pos.price != null ? `₹${pos.price.toFixed(2)}` : "—"}
-                  </td>
-                </tr>
-              ))}
+              {openPositions.map((pos, idx) => {
+                const rows = [];
+                if (pos.buy_time) {
+                  rows.push(
+                    <tr key={`${idx}-buy`}>
+                      <td>{getTimeAMPM(pos.buy_time)}</td>
+                      <td className="displaychart-buy blink">📈 BUY</td>
+                      <td>{pos.buy_price != null ? `₹${pos.buy_price.toFixed(2)}` : "—"}</td>
+                    </tr>
+                  );
+                }
+                if (pos.signal === "CLOSED" && pos.sell_time) {
+                  rows.push(
+                    <tr key={`${idx}-sell`}>
+                      <td>{getTimeAMPM(pos.sell_time)}</td>
+                      <td className="displaychart-sell">📉 SELL</td>
+                      <td>{pos.sell_price != null ? `₹${pos.sell_price.toFixed(2)}` : "—"}</td>
+                    </tr>
+                  );
+                }
+                return rows;
+              })}
             </tbody>
           </table>
         ) : (

@@ -138,16 +138,37 @@
 
 /* Responsive for small screens */
 @media (max-width: 768px) {
+  .profile-page {
+    padding: 1rem;
+    min-height: auto;
+  }
+
   .profile-content {
     flex-direction: column;
     align-items: center;
+    gap: 2rem;
+    max-width: 100%;
   }
   
   .profile-card, .reset-sections {
     max-width: 100%;
+    width: 100%;
     flex: unset;
+    padding: 1.25rem;
+    margin: 0;
+  }
+
+  .reset-section {
+    padding: 1rem 1rem;  /* Reduced horizontal spacing for mobile */
+  }
+
+  .close-btn {
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem 0.75rem;
   }
 }
+
 /* Form group layout */
 .form-group {
   display: flex;
@@ -245,6 +266,7 @@ input:checked + .slider:before {
   border-color: #6366f1;
   outline: none;
 }
+
 .action-btn {
   background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
   color: #fff;
@@ -258,6 +280,7 @@ input:checked + .slider:before {
   box-shadow: 0 2px 14px rgba(59,130,246,0.08);
   transition: background 0.16s, box-shadow 0.16s, transform 0.08s;
 }
+
 .action-btn:hover,
 .action-btn:focus {
   background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);

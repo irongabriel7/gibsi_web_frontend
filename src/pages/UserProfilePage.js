@@ -4,6 +4,7 @@ import api from "../apiClient";
 import "../styles/UserProfile.css";
 import ProfilePage from "./ProfilePage"; // Detail/edit panel for selected user
 
+
 export default function UserProfilePage() {
   const [users, setUsers] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -32,6 +33,31 @@ export default function UserProfilePage() {
   // Add this handler!
   function handleCloseModalOrPanel() {
     setSelected(null);
+  }
+
+  // Add this function inside UserProfilePage component
+  async function handleDeleteUser(gid) {
+    if (!window.confirm("Are you sure you want to delete this user? This action cannot be undone.")) return;
+
+    try {
+      const token = localStorage.getItem("access_token");
+      if (!token) throw new Error("No authentication token");
+
+      await api.delete(`/api/admin/delete-user/${gid}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Refresh user list after deletion
+      const res = await api.get("/api/users", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUsers(res.data);
+
+      setSelected(null); // Close detail panel
+
+    } catch (err) {
+      alert("Failed to delete user.");
+    }
   }
 
   if (loading) return <div style={{ padding: "2rem" }}>Loading...</div>;
@@ -77,7 +103,12 @@ export default function UserProfilePage() {
       {/* Detail/Edit panel */}
       {selected && (
         <div style={{ marginTop: "2rem" }}>
-          <ProfilePage gid={selected} isAdmin={true} onClose={handleCloseModalOrPanel} />
+          <ProfilePage
+            gid={selected}
+            isAdmin={true}
+            onClose={handleCloseModalOrPanel}
+            onDelete={handleDeleteUser}  // <-- new prop
+          />
         </div>
       )}
     </div>

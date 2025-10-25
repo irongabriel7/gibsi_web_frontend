@@ -9,7 +9,9 @@
   --c-blue: #4db9ff;
   --glass: rgba(255, 255, 255, 0.04);
 
-  min-height: 100vh;
+  transform: translateY(-65px);
+  margin-bottom: -200px;
+  min-height: 92vh;
   padding: 1rem;
   background: radial-gradient(
     1200px 700px at 20% -10%,
@@ -164,11 +166,16 @@
 /* Responsive */
 @media (max-width: 1024px){
   .health-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .hud {
+    display: none !important;
+  }
 }
 @media (max-width: 640px){
   .health-grid{ grid-template-columns: 1fr; }
   .health-header h1{ font-size:18px; }
-  .hud{ right:8px; left:8px; justify-content:space-around; }
+  .hud {
+    display: none !important;
+  }
 }
 .process-status-container {
   margin-top: 2rem;

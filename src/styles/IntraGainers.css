@@ -1,11 +1,11 @@
-
 .intra-gainer-container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 30px auto 50px;
   padding: 20px 30px;
   background-color: #1f222a;
   border-radius: 10px;
   box-shadow: 0 8px 30px rgb(0 0 0 / 0.4);
+  transform: translateY(-50px);
   user-select: none;
   font-family: "Roboto", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #e0e6f0;
@@ -51,7 +51,8 @@
 }
 
 .clock {
-  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 90px;
   font-family: "Source Code Pro", monospace;
   font-size: 18px;
   letter-spacing: 0.06em;
@@ -158,19 +159,56 @@
   text-align: center;
 }
 
-@media screen and (max-width: 900px) {
+@keyframes syncedBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Shared class for synchronized blink */
+.synced-blink {
+  animation: syncedBlink 1.5s infinite;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0s !important;
+}
+@media screen and (max-width: 600px) {
   .intra-gainer-container {
-    padding: 15px 20px;
-    margin: 20px 10px 40px;
+    max-width: 100%;          /* make container full width */
+    margin: 15px 10px 30px;   /* smaller margins */
+    padding: 10px 10px;       /* reduced padding */
+    transform: none;          /* remove translateY on mobile */
+    border-radius: 8px;       /* slightly smaller radius */
   }
 
-  .intra-gainer-container thead tr th,
-  .intra-gainer-container tbody tr td {
-    padding: 10px 12px;
-    font-size: 13px;
+  .intra-gainer-container header {
+    flex-direction: column;   /* stack header items */
+    align-items: flex-start;  /* left align */
+    margin-bottom: 15px;
+  }
+
+  .intra-gainer-container header h1 {
+    font-size: 22px;          /* smaller font */
+    margin-bottom: 8px;
+  }
+
+  .clock {
+    margin-top: 20px;
+    margin-right: 0;
+    font-size: 16px;
+  }
+
+  .intra-gainer-container table {
+    font-size: 8px;          /* smaller text */
+    display: block;           /* enable scroll on overflow */
+    overflow-x: auto;
+    white-space: nowrap;
   }
 
   .reason-text {
-    max-width: 150px;
+    max-width: 100px;         /* further reduce reason text width */
+  }
+
+  .market-status {
+    font-size: 10px;
+    padding: 8px 12px;
   }
 }

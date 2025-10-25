@@ -3,14 +3,19 @@
   font-family: "Segoe UI", sans-serif;
   display: flex;
   justify-content: center;
+  min-height: 100vh;
+  transform: translateY(-80px);
+  margin-bottom: -95px;
 }
 /* Central content block */
 .content-wrapper {
-  width: 900px;
+  width: 120%;
+  max-width: 1500px;
   background: #ffffff;
   padding: 25px 30px;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin: 0 auto; /* ensure it's centered */
 }
 
 /* Header title */
@@ -27,7 +32,7 @@
   border-radius: 10px;
   padding: 16px;
   margin-bottom: 25px;
-  font-size: 1rem;
+  font-size: 1.3rem;
   font-weight: 500;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
 }
@@ -71,7 +76,8 @@
 .stock-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
+  min-width: 1000px;
+  
 }
 
 .stock-table th,
@@ -79,13 +85,14 @@
   padding: 0.75rem 1rem;
   text-align: center;
   border-bottom: 1px solid #e5e7eb;
+  font-size: 1.25rem;
 }
 
 .stock-table th {
   background-color: #f1f5f9;
   color: #374151;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 1.3rem;
 }
 
 .stock-table tr:hover {

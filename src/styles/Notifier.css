@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&display=swap');
 
 .notifier-bg {
-  min-height: 100vh;
+  min-height: 93vh;
   background: radial-gradient(circle at 20% 30%, #0ff2c3 0%, #201b32 80%);
   display: flex;
   align-items: center;
@@ -10,6 +10,8 @@
   overflow: hidden;
   font-family: 'Orbitron', 'Montserrat', 'Roboto', Arial, sans-serif;
   padding: 0 0.5rem;
+  transform: translateY(-65px);
+  margin-bottom: -300px;
 }
 .notifier-form {
   z-index: 2;

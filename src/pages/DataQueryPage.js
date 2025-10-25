@@ -150,7 +150,7 @@ export default function DataQueryPage() {
             <div className="no-data">No data found.</div>
           ) : (
             <>
-              <div className="table-wrapper responsive-table">
+              <div className="responsive-table">
                 <table className="stock-table fixed-width-table">
                     <thead>
                     <tr>
@@ -203,7 +203,7 @@ export default function DataQueryPage() {
           )}
         </div>
       </div>
-      <div className="footer">© {new Date().getFullYear()} Stock Query Tool</div>
+      <div className="footer">© {new Date().getFullYear()} GIBSI Trader</div>
     </div>
   );
 }
