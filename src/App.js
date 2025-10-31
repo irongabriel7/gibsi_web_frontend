@@ -16,6 +16,8 @@ import MongoExport from './pages/MongoexportPage';
 import HealthPage from './pages/HealthPage';
 import NotifierPage from './pages/NotifierPage';
 import AnalyzePage from './pages/AnalyzePage';
+import ConfigUpdaterPage from './pages/ConfigUpdaterPage';
+import ModelTrainerPage from './pages/ModelTrainerPage';
 import LoveletterPage from './pages/LoveletterPage';
 import { useAutoLogout } from './components/useAutoLogout';
 import api from "./apiClient";
@@ -261,6 +263,7 @@ function App() {
                   <NavLink to="/data-query" onClick={handleMenuClose}>Data Query</NavLink>
                   <NavLink to="/chart" onClick={handleMenuClose}>Chart</NavLink>
                   <NavLink to="/health-check" onClick={handleMenuClose}>System Health</NavLink>
+                  <NavLink to="/config-update" onClick={handleMenuClose}>Trade Config</NavLink>
                 </div>
               )}
             </div>
@@ -283,6 +286,7 @@ function App() {
                   <NavLink to="/user-profile" onClick={handleMenuClose}>User Profile</NavLink>
                   <NavLink to="/mongo-export" onClick={handleMenuClose}>DB Export</NavLink>
                   <NavLink to="/send-notifier" onClick={handleMenuClose}>Notifier</NavLink>
+                  <NavLink to="/model-trainer" onClick={handleMenuClose}>Model Trainer</NavLink>
                 </div>
               )}
             </div>
@@ -341,7 +345,9 @@ function App() {
             <Route path="/user-profile" element={<PrivateRoute unlocked={unlocked}>{profile?.usertype === "admin" ? <UserProfilePage /> : <Navigate to="/" replace />}</PrivateRoute>} />
             <Route path="/mongo-export" element={<PrivateRoute unlocked={unlocked}>{profile?.usertype === "admin" ? <MongoExport /> : <Navigate to="/" replace />}</PrivateRoute>} />
             <Route path="/health-check" element={<PrivateRoute unlocked={unlocked}><HealthPage profile={profile} /></PrivateRoute>} />
+            <Route path="/config-update" element={<PrivateRoute unlocked={unlocked}><ConfigUpdaterPage profile={profile} /></PrivateRoute>} />
             <Route path="/send-notifier" element={<PrivateRoute unlocked={unlocked}>{profile?.usertype === "admin" ? <NotifierPage /> : <Navigate to="/" replace />}</PrivateRoute>} />
+            <Route path="/model-trainer" element={<PrivateRoute unlocked={unlocked}>{profile?.usertype === "admin" ? <ModelTrainerPage /> : <Navigate to="/" replace />}</PrivateRoute>} />
           </Routes>
         )}
       </main>

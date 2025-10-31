@@ -11,7 +11,7 @@ import {
   Play,
   Pause,
   RotateCw,
-  Square
+  Square,
 } from "lucide-react";
 import "../styles/Health.css";
 
@@ -21,10 +21,19 @@ export default function HealthPage({ profile }) {
   const [error, setError] = useState("");
   const [updating, setUpdating] = useState(false);
 
+  const [modelTrainerFlag, setModelTrainerFlag] = useState(null);
+  const [newTrainerFlag, setNewTrainerFlag] = useState(null);
+  const [tempHasFiles, setTempHasFiles] = useState(false);
+  const [clearingTemp, setClearingTemp] = useState(false);
+
+  // Fetch health & flags
   const fetchHealth = async () => {
     try {
       const res = await api.get("/api/health");
       setHealth(res.data);
+      // Extract model_trainer flag (including percent)
+      const mtFlag = res.data?.process_statuses?.model_trainer || null;
+      setModelTrainerFlag(mtFlag);
       setError("");
     } catch (err) {
       setError("Failed to fetch system health");
@@ -33,10 +42,52 @@ export default function HealthPage({ profile }) {
     }
   };
 
+  const fetchNewTrainerFlag = async () => {
+    try {
+      const res = await api.get("/api/control/new_trainer");
+      setNewTrainerFlag(res.data);
+    } catch (err) {
+      console.error("Failed to fetch new_trainer flag", err);
+    }
+  };
+
+  const checkTempFolder = async () => {
+    try {
+      const res = await api.get("/api/temp/check");
+      setTempHasFiles(res.data.has_files);
+    } catch (err) {
+      console.error("Failed to check temp folder", err);
+    }
+  };
+
+  const clearTempFolder = async () => {
+    setClearingTemp(true);
+    try {
+      const res = await api.post("/api/temp/clear");
+      if (res.data.success) {
+        setTempHasFiles(false);
+        alert("Temporary folder cleared successfully.");
+      } else {
+        alert("Failed to clear temp folder: " + res.data.message);
+      }
+    } catch (err) {
+      alert("Error clearing temp folder.");
+      console.error(err);
+    } finally {
+      setClearingTemp(false);
+    }
+  };
+
   useEffect(() => {
+    checkTempFolder();
     fetchHealth();
-    const id = setInterval(fetchHealth, 4000);
-    return () => clearInterval(id);
+    fetchNewTrainerFlag();
+    const id1 = setInterval(fetchHealth, 4000);
+    const id2 = setInterval(fetchNewTrainerFlag, 6000);
+    return () => {
+      clearInterval(id1);
+      clearInterval(id2);
+    };
   }, []);
 
   const metrics = useMemo(() => {
@@ -60,7 +111,7 @@ export default function HealthPage({ profile }) {
       stocks_fetcher: ps.stocks_fetcher?.status ?? "unknown",
       trade_engine: ps.trade_engine?.status ?? "unknown",
       model_trainer: ps.model_trainer?.status ?? "unknown",
-      notifier: ps.notifier?.status ?? "unknown", // new notifier process
+      notifier: ps.notifier?.status ?? "unknown",
     };
   }, [health]);
 
@@ -71,6 +122,25 @@ export default function HealthPage({ profile }) {
       await fetchHealth();
     } catch (err) {
       console.error(`Failed to ${action} ${process}`, err);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleNewTrainerControl = async (newStatus) => {
+    if (!newTrainerFlag) return;
+    setUpdating(true);
+    try {
+      await api.post("/api/control/new_trainer", {
+        status: newStatus,
+        flagvalue: newStatus === "start",
+        percent: newTrainerFlag.percent || 0,
+        description: newTrainerFlag.description,
+        flagname: "new_trainer",
+      });
+      await fetchNewTrainerFlag();
+    } catch (err) {
+      console.error("Failed to update new_trainer flag", err);
     } finally {
       setUpdating(false);
     }
@@ -103,7 +173,12 @@ export default function HealthPage({ profile }) {
 
       {/* Main metrics grid */}
       <div className="health-grid">
-        <GaugeCard title="CPU" icon={<Cpu />} value={metrics.cpu} color="var(--c-cyan)" />
+        <GaugeCard
+          title="CPU"
+          icon={<Cpu />}
+          value={metrics.cpu}
+          color="var(--c-cyan)"
+        />
         <GaugeCard
           title="Memory"
           icon={<MemoryStick />}
@@ -118,27 +193,33 @@ export default function HealthPage({ profile }) {
           color="var(--c-pink)"
           subtitle={metrics.diskDetail}
         />
-
         <InfoCard title="Network I/O" icon={<Network />}>
           <div className="net-io">
-            <div><span className="label">Up</span><span className="val">{metrics.netUp.toFixed(2)} MB</span></div>
-            <div><span className="label">Down</span><span className="val">{metrics.netDown.toFixed(2)} MB</span></div>
+            <div>
+              <span className="label">Up</span>
+              <span className="val">{metrics.netUp.toFixed(2)} MB</span>
+            </div>
+            <div>
+              <span className="label">Down</span>
+              <span className="val">{metrics.netDown.toFixed(2)} MB</span>
+            </div>
           </div>
           <div className="bars">
             <Bar pct={scaleToBar(metrics.netUp)} color="var(--c-green)" />
             <Bar pct={scaleToBar(metrics.netDown)} color="var(--c-blue)" />
           </div>
         </InfoCard>
-
         <InfoCard title="GPU Temp" icon={<ThermometerSun />}>
           <div className="gpu-wrap">
             <ThermalSVG />
             <div className="gpu-temp neon-text">{metrics.gpuTemp}</div>
           </div>
         </InfoCard>
-
         <InfoCard title="Cooling System">
-          <div className="cooling"><FanSVG /><div className="cooling-label">Fans Operational</div></div>
+          <div className="cooling">
+            <FanSVG />
+            <div className="cooling-label">Fans Operational</div>
+          </div>
         </InfoCard>
       </div>
 
@@ -149,28 +230,30 @@ export default function HealthPage({ profile }) {
           <div className="process-status-grid">
             {Object.entries(processStatuses).map(([key, status]) => {
               const trainerDetails = health?.process_statuses?.model_trainer || {};
-
-              // Assign individual signals
               let signalActive = null;
-              if (key === "stocks_fetcher") signalActive = trainerDetails.stocks_fetcher_status;
-              else if (key === "trade_engine") signalActive = trainerDetails.trade_engine_status;
-              else if (key === "model_trainer") signalActive = trainerDetails.model_training_status;
+              if (key === "stocks_fetcher")
+                signalActive = trainerDetails.stocks_fetcher_status;
+              else if (key === "trade_engine")
+                signalActive = trainerDetails.trade_engine_status;
+              else if (key === "model_trainer")
+                signalActive = trainerDetails.model_training_status;
 
               return (
-                <div key={key} className={`process-status-card ${statusColor(status)}`}>
+                <div
+                  key={key}
+                  className={`process-status-card ${statusColor(status)}`}
+                >
                   <div className="process-card-header">
-                    <div className="process-name">{key.replace(/_/g, " ").toUpperCase()}</div>
-                    <div className="process-status">{String(status).toUpperCase()}</div>
+                    <div className="process-name">
+                      {key.replace(/_/g, " ").toUpperCase()}
+                    </div>
+                    <div className="process-status">
+                      {String(status).toUpperCase()}
+                    </div>
                   </div>
-
-                  {/* Individual process indicator (if applicable) */}
                   {signalActive !== null && (
-                    <IndicatorSignal
-                      label="Status"
-                      active={signalActive}
-                    />
+                    <IndicatorSignal label="Status" active={signalActive} />
                   )}
-
                   <div className="process-actions">
                     {profile?.usertype === "admin" ? (
                       key === "notifier" ? (
@@ -223,7 +306,99 @@ export default function HealthPage({ profile }) {
                 </div>
               );
             })}
+
+            {/* Model Trainer Progress Bar and Controls */}
+            {modelTrainerFlag && (
+              <div
+                className={`process-status-card ${
+                  statusColor(modelTrainerFlag.status)
+                }`}
+              >
+                <div className="process-card-header">
+                  <div className="process-name">MODEL TRAINER</div>
+                  <div className="process-status">
+                    {String(modelTrainerFlag.status).toUpperCase()}
+                  </div>
+                </div>
+                {modelTrainerFlag.percent !== undefined && (
+                  <div className="progress-bar">
+                    <motion.div
+                      className="progress-bar-fill"
+                      style={{ width: `${modelTrainerFlag.percent}%` }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${modelTrainerFlag.percent}%` }}
+                      transition={{ duration: 0.8 }}
+                    />
+                    <span>{modelTrainerFlag.percent}% complete</span>
+                  </div>
+                )}
+                {profile?.usertype === "admin" && (
+                  <div className="process-actions">
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* New Trainer Control UI */}
+            {newTrainerFlag && (
+              <div
+                className={`process-status-card ${statusColor(newTrainerFlag.status)}`}
+              >
+                <div className="process-card-header">
+                  <div className="process-name">NEW MODEL WEEKEND TRAINING</div>
+                  <div className="process-status">
+                    {String(newTrainerFlag.status).toUpperCase()}
+                  </div>
+                </div>
+
+                {newTrainerFlag.flagvalue && (
+                  <div className="progress-bar">
+                    <motion.div
+                      className="progress-bar-fill"
+                      style={{ width: `${newTrainerFlag.percent || 0}%` }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${newTrainerFlag.percent || 0}%` }}
+                      transition={{ duration: 0.8 }}
+                    />
+                    <span>{newTrainerFlag.percent || 0}% complete</span>
+                  </div>
+                )}
+
+                <div className="process-actions">
+                  {profile?.usertype === "admin" ? (
+                    <>
+                      <ActionButton
+                        icon={<Play size={16} />}
+                        label="Start"
+                        onClick={() => handleNewTrainerControl("start")}
+                        disabled={updating || newTrainerFlag.status === "start"}
+                      />
+                      <ActionButton
+                        icon={<Square size={16} />}
+                        label="Stop"
+                        onClick={() => handleNewTrainerControl("stop")}
+                        disabled={updating || newTrainerFlag.status === "stop"}
+                      />
+                    </>
+                  ) : (
+                    <span className="process-view-only">Actions restricted</span>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
+        </div>
+      )}
+      {/* Clear Temp Button: admin only */}
+      {profile?.usertype === "admin" && (
+        <div style={{ margin: "1rem" }}>
+          <button
+            onClick={clearTempFolder}
+            disabled={clearingTemp}
+            className={`btn ${tempHasFiles ? "btn-danger" : "btn-success"}`}
+          >
+            {clearingTemp ? "Clearing..." : "Clear Temp"}
+          </button>
         </div>
       )}
 
@@ -262,15 +437,25 @@ function IndicatorSignal({ label, active }) {
 /* ---------- Info Cards, Gauges, Bars ---------- */
 function InfoCard({ title, icon, children }) {
   return (
-    <motion.div className="card system-card" whileHover={{ scale: 1.03 }} transition={{ type: "spring", stiffness: 200, damping: 20 }}>
-      <div className="card-head"><span className="card-icon">{icon}</span><span className="card-title">{title}</span></div>
+    <motion.div
+      className="card system-card"
+      whileHover={{ scale: 1.03 }}
+      transition={{ type: "spring", stiffness: 200, damping: 20 }}
+    >
+      <div className="card-head">
+        <span className="card-icon">{icon}</span>
+        <span className="card-title">{title}</span>
+      </div>
       <div className="card-body">{children}</div>
     </motion.div>
   );
 }
 
 function GaugeCard({ title, icon, value, color, subtitle }) {
-  const r = 52, C = 2 * Math.PI * r, pct = clamp(value), dashOffset = C * (1 - pct / 100);
+  const r = 52,
+    C = 2 * Math.PI * r,
+    pct = clamp(value),
+    dashOffset = C * (1 - pct / 100);
   return (
     <InfoCard title={title} icon={icon}>
       <div className="gauge">
@@ -299,20 +484,36 @@ function GaugeCard({ title, icon, value, color, subtitle }) {
 function Bar({ pct, color }) {
   return (
     <div className="bar">
-      <motion.div className="bar-fill" style={{ background: color }} initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8 }} />
+      <motion.div
+        className="bar-fill"
+        style={{ background: color }}
+        initial={{ width: 0 }}
+        animate={{ width: `${pct}%` }}
+        transition={{ duration: 0.8 }}
+      />
     </div>
   );
 }
 
 /* ---------- Mini Gauges ---------- */
 function MiniGauge({ label, value }) {
-  const v = clamp(value), R = 24, C = 2 * Math.PI * R;
+  const v = clamp(value),
+    R = 24,
+    C = 2 * Math.PI * R;
   return (
     <div className="hud-item">
       <div className="hud-ring">
         <svg viewBox="0 0 60 60">
           <circle cx="30" cy="30" r={R} className="hud-bg" />
-          <motion.circle cx="30" cy="30" r={R} className="hud-fg" strokeDasharray={C} animate={{ strokeDashoffset: C * (1 - v / 100) }} transition={{ duration: 0.8 }} />
+          <motion.circle
+            cx="30"
+            cy="30"
+            r={R}
+            className="hud-fg"
+            strokeDasharray={C}
+            animate={{ strokeDashoffset: C * (1 - v / 100) }}
+            transition={{ duration: 0.8 }}
+          />
         </svg>
         <div className="hud-val">{v}</div>
       </div>
@@ -324,7 +525,12 @@ function MiniGauge({ label, value }) {
 /* ---------- Animated SVGs ---------- */
 function FanSVG() {
   return (
-    <motion.svg viewBox="0 0 100 100" className="fan" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.8, ease: "linear" }}>
+    <motion.svg
+      viewBox="0 0 100 100"
+      className="fan"
+      animate={{ rotate: 360 }}
+      transition={{ repeat: Infinity, duration: 1.8, ease: "linear" }}
+    >
       <circle cx="50" cy="50" r="10" className="fan-hub" />
       <path d="M50 8 L63 35 L37 35 Z" className="fan-blade" />
       <path d="M92 50 L65 63 L65 37 Z" className="fan-blade" />
@@ -337,8 +543,20 @@ function FanSVG() {
 function ThermalSVG() {
   return (
     <svg viewBox="0 0 120 80" className="thermal">
-      <defs><linearGradient id="heat" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stopColor="#ffa34d" /><stop offset="100%" stopColor="#ff0040" /></linearGradient></defs>
-      <motion.path d="M10 60 Q60 40 110 60" stroke="url(#heat)" animate={{ opacity: [0.6, 1, 0.6] }} transition={{ repeat: Infinity, duration: 2 }} fill="none" strokeWidth="3" />
+      <defs>
+        <linearGradient id="heat" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#ffa34d" />
+          <stop offset="100%" stopColor="#ff0040" />
+        </linearGradient>
+      </defs>
+      <motion.path
+        d="M10 60 Q60 40 110 60"
+        stroke="url(#heat)"
+        animate={{ opacity: [0.6, 1, 0.6] }}
+        transition={{ repeat: Infinity, duration: 2 }}
+        fill="none"
+        strokeWidth="3"
+      />
     </svg>
   );
 }
@@ -354,10 +572,15 @@ function scaleToBar(v) {
 }
 function statusColor(status) {
   switch (String(status).toLowerCase()) {
-    case "start": return "status-start";
-    case "pause": return "status-pause";
-    case "stop": return "status-stop";
-    case "restart": return "status-restart";
-    default: return "status-unknown";
+    case "start":
+      return "status-start";
+    case "pause":
+      return "status-pause";
+    case "stop":
+      return "status-stop";
+    case "restart":
+      return "status-restart";
+    default:
+      return "status-unknown";
   }
 }
